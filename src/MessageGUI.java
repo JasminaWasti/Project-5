@@ -92,7 +92,7 @@ public class MessageGUI extends JFrame {
     }
 
     public void runChatNet() throws IOException{
-        serverSocket = new ServerSocket(4242, 100);
+        serverSocket = new ServerSocket(59001, 100);
         boolean run = true;
         while(run) {
             try {
