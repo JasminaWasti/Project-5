@@ -209,12 +209,54 @@ public class Login extends  JFrame {
                addUser.addActionListener(new ActionListener() {
                    public void actionPerformed(ActionEvent e) {
                        String username = newUsername.getText();
-                       String password = newPassword.getText();
-                       int ageOfUser = Integer.parseInt(age.getText().trim());
-                       String genderOfUser = gender.getText();
-                       String name = usersFirstName.getText().trim() + " " + usersLastName.getText().trim();
-                       User newUser = new User(name, username, password, ageOfUser, genderOfUser);
-                       users.add(newUser);
+                       File file = new File("userPass.txt");
+                       FileReader fr = null;
+                       try {
+                           fr = new FileReader(file);
+                       } catch (FileNotFoundException fileNotFoundException) {
+                           fileNotFoundException.printStackTrace();
+                       }
+                       BufferedReader bfr = new BufferedReader(fr);
+                       ArrayList<String> usernameArray = new ArrayList<>();
+                       ArrayList<String> passwordArray = new ArrayList<>();
+
+                       String usernamePasswordData = " ";
+                       while (usernamePasswordData != null) {
+                           try {
+                               usernamePasswordData = bfr.readLine();
+                           } catch (IOException ioException) {
+                               ioException.printStackTrace();
+                           }
+                           usernameArray.add(usernamePasswordData);
+                           try {
+                               usernamePasswordData = bfr.readLine();
+                           } catch (IOException ioException) {
+                               ioException.printStackTrace();
+                           }
+                           if (usernamePasswordData == null) {
+                               break;
+                           }
+                           passwordArray.add(usernamePasswordData);
+
+                       }
+                       boolean exists = false;
+                       for (int i = 0; i < usernameArray.size(); i++) {
+                           if (usernameArray.get(i).equals(username)) {
+                               exists = true;
+                               loginPanel.setVisible(true);
+                               newUserPanel.setVisible(false);
+                               JOptionPane.showMessageDialog(null, "That username already exists");
+                           }
+                       }
+                       if(!exists) {
+                           String password = newPassword.getText();
+                           int ageOfUser = Integer.parseInt(age.getText().trim());
+                           String genderOfUser = gender.getText();
+                           String name = usersFirstName.getText().trim() + " " + usersLastName.getText().trim();
+                           User newUser = new User(name, username, password, ageOfUser, genderOfUser);
+                           users.add(newUser);
+                       }
+
 
                    }
                });
