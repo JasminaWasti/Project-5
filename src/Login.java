@@ -147,7 +147,7 @@ public class Login extends  JFrame {
                     FileReader fr = new FileReader(file);
                     BufferedReader bfr = new BufferedReader(fr);
 
-                    FileWriter filewrite = new FileWriter(file, true);
+
 
 
                     String puname = user.getText();
@@ -219,26 +219,18 @@ public class Login extends  JFrame {
                        BufferedReader bfr = new BufferedReader(fr);
                        ArrayList<String> usernameArray = new ArrayList<>();
                        ArrayList<String> passwordArray = new ArrayList<>();
-
-                       String usernamePasswordData = " ";
-                       while (usernamePasswordData != null) {
-                           try {
+                       try {
+                           String usernamePasswordData = usernamePasswordData = bfr.readLine();
+                           while (usernamePasswordData != null) {
+                               usernameArray.add(usernamePasswordData);
                                usernamePasswordData = bfr.readLine();
-                           } catch (IOException ioException) {
-                               ioException.printStackTrace();
-                           }
-                           usernameArray.add(usernamePasswordData);
-                           try {
+                               passwordArray.add(usernamePasswordData);
                                usernamePasswordData = bfr.readLine();
-                           } catch (IOException ioException) {
-                               ioException.printStackTrace();
                            }
-                           if (usernamePasswordData == null) {
-                               break;
-                           }
-                           passwordArray.add(usernamePasswordData);
-
+                       } catch (IOException ioException) {
+                           JOptionPane.showMessageDialog(null, "Error in reading file");
                        }
+
                        boolean exists = false;
                        for (int i = 0; i < usernameArray.size(); i++) {
                            if (usernameArray.get(i).equals(username)) {
@@ -255,6 +247,7 @@ public class Login extends  JFrame {
                            String name = usersFirstName.getText().trim() + " " + usersLastName.getText().trim();
                            User newUser = new User(name, username, password, ageOfUser, genderOfUser);
                            users.add(newUser);
+                           storeUsernamePassword(newUser);
                        }
 
 
@@ -278,6 +271,21 @@ public class Login extends  JFrame {
             return -1;
         }
         return userIndex;
+    }
+
+    public void storeUsernamePassword(User newUser) {
+        try{
+            File file = new File("userPass.txt");
+            FileWriter filewrite = new FileWriter(file, true);
+            PrintWriter pw = new PrintWriter(filewrite);
+            pw.println();
+            pw.println(newUser.getUsername());
+            pw.print(newUser.getPassword());
+            pw.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Glitch in the system");
+        }
+
     }
 
 
