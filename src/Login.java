@@ -3,9 +3,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class Login extends  JFrame {
-    //ArrayList<User> Users;
+    ArrayList<User> users;
     JFrame frame;
     JButton loginButton;
     JPanel loginPanel;
@@ -30,6 +33,7 @@ public class Login extends  JFrame {
     JLabel lastNameLabel;
     JButton addUser;
     JButton goBack;
+    HashMap<String, String> usernamesPasswords;
 
 
 
@@ -62,7 +66,7 @@ public class Login extends  JFrame {
         loginPanel.add(username);
         loginPanel.add(password);
         frame.add(loginPanel);
-
+        users = new ArrayList<>();
         frame.setVisible(true);
         loginPanel.setVisible(true);
 
@@ -80,7 +84,7 @@ public class Login extends  JFrame {
         ageLabel = new JLabel("Age:");
         genderLabel = new JLabel("Gender:");
         firstNameLabel = new JLabel("First Name:");
-        lastNameLabel = new JLabel("Last Name");
+        lastNameLabel = new JLabel("Last Name:");
         addUser = new JButton("Add User");
         goBack = new JButton("Go Back");
 
@@ -140,34 +144,49 @@ public class Login extends  JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     File file = new File("userPass.txt");
-                    Scanner scan = new Scanner(file);
-                    ;
-                    String line = null;
+                    FileReader fr = new FileReader(file);
+                    BufferedReader bfr = new BufferedReader(fr);
+
                     FileWriter filewrite = new FileWriter(file, true);
 
-                    String usertxt = " ";
-                    String passtxt = " ";
+
                     String puname = user.getText();
                     String ppaswd = pass.getText();
+                    ArrayList<String> usernameArray = new ArrayList<>();
+                    ArrayList<String> passwordArray = new ArrayList<>();
 
-
-                    while (scan.hasNext()) {
-                        usertxt = scan.nextLine();
-                        passtxt = scan.nextLine();
+                    String usernamePasswordData = " ";
+                    while (usernamePasswordData != null) {
+                        usernamePasswordData = bfr.readLine();
+                        usernameArray.add(usernamePasswordData);
+                        usernamePasswordData = bfr.readLine();
+                        if (usernamePasswordData == null) {
+                            break;
+                        }
+                        passwordArray.add(usernamePasswordData);
 
                     }
-                    while (scan.hasNext()) {
-                        usertxt = scan.nextLine();
-                        passtxt = scan.nextLine();
-                    }
-                    if (puname.equals("") && ppaswd.equals("")) {
+
+                    if (puname.equals("") || ppaswd.equals("")) {
                         JOptionPane.showMessageDialog(null, "Please insert Username and Password");
                     } else {
 
-                        JOptionPane.showMessageDialog(null, "Wrong Username / Password");
-                        user.setText("");
-                        pass.setText("");
-                        user.requestFocus();
+                        int userIndex = checkUsername(usernameArray, puname);
+                        if (userIndex == -1) {
+                            JOptionPane.showMessageDialog(null, "No accounts with that username");
+                            user.setText("");
+                            pass.setText("");
+                            user.requestFocus();
+                        } else {
+                            if (passwordArray.get(userIndex).equals(ppaswd)) {
+                                JOptionPane.showMessageDialog(null, "Logged in");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Wrong Password");
+                                user.setText("");
+                                pass.setText("");
+                                user.requestFocus();
+                            }
+                        }
                     }
                 } catch (IOException d) {
                     d.printStackTrace();
@@ -188,12 +207,14 @@ public class Login extends  JFrame {
 
                });
                addUser.addActionListener(new ActionListener() {
-                   @Override
-
-                   // NEW PANELS FOR NULL STUFF
                    public void actionPerformed(ActionEvent e) {
                        String username = newUsername.getText();
                        String password = newPassword.getText();
+                       int ageOfUser = Integer.parseInt(age.getText().trim());
+                       String genderOfUser = gender.getText();
+                       String name = usersFirstName.getText().trim() + " " + usersLastName.getText().trim();
+                       User newUser = new User(name, username, password, ageOfUser, genderOfUser);
+                       users.add(newUser);
 
                    }
                });
@@ -201,5 +222,21 @@ public class Login extends  JFrame {
       });
 
 
-}
+    }
+
+    public int checkUsername(ArrayList<String> usernameArray, String puname) {
+        int userIndex = -1;
+        for (int i = 0; i < usernameArray.size(); i++) {
+            if (usernameArray.get(i).equals(puname)) {
+                userIndex = i;
+                break;
+            }
+        }
+        if (userIndex == -1) {
+            return -1;
+        }
+        return userIndex;
+    }
+
+
 }
