@@ -22,7 +22,7 @@ public class Login extends  JFrame {
     JTextField newUsername;
     JTextField newPassword;
     JTextField age;
-    JTextField gender;
+    JComboBox<String> gender;
     JTextField usersFirstName;
     JTextField usersLastName;
     JLabel usernameLabel;
@@ -76,7 +76,8 @@ public class Login extends  JFrame {
         newUsername = new JTextField(15);
         newPassword = new JTextField(15);
         age = new JTextField(15);
-        gender = new JTextField(15);
+        String[] genders = {"Male", "Female", "Deline to State"};
+        gender = new JComboBox<String>(genders);
         usersFirstName = new JTextField(15);
         usersLastName = new JTextField(15);
         usernameLabel = new JLabel("Username:");
@@ -243,7 +244,7 @@ public class Login extends  JFrame {
                        if(!exists) {
                            String password = newPassword.getText();
                            int ageOfUser = Integer.parseInt(age.getText().trim());
-                           String genderOfUser = gender.getText();
+                           String genderOfUser = String.valueOf(gender.getSelectedItem());
                            String name = usersFirstName.getText().trim() + " " + usersLastName.getText().trim();
                            User newUser = new User(name, username, password, ageOfUser, genderOfUser);
                            users.add(newUser);

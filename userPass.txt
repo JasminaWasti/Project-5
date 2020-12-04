@@ -8,3 +8,7 @@ abcd
 dcba
 bobo
 bobo
+boris
+palant
+big
+small
