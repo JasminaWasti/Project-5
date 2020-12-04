@@ -1,14 +1,5 @@
-hello
-goodbye
-redlight
-greenlight
-1234
-4321
-abcd
-dcba
-bobo
-bobo
-boris
-palant
-big
-small
+billy_wright,billypass,billy wright,12,Male
+bobby_man,bobbypass,bobby man,120,Decline to State
+sophia_person,sophiapass,sophia person,40,Female
+jane_doe,janepass,Jane Doe,19,Female
+purdue.pete,peter,Purdue Pete,100,Deline to State

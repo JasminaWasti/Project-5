@@ -39,6 +39,21 @@ public class Login extends  JFrame {
 
     public Login() {
         super("ChatNet");
+        users = new ArrayList<>();
+        try {
+            File file = new File("userPass.txt");
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String usernamePasswordData = bfr.readLine();
+            while (usernamePasswordData != null) {
+                String[] data = usernamePasswordData.split(",");
+                User readUser = new User(data[2], data[0], data[1], Integer.parseInt(data[3]), data[4]);
+                users.add(readUser);
+                usernamePasswordData = bfr.readLine();
+            }
+        } catch (IOException d) {
+            d.printStackTrace();
+        }
         frame = new JFrame("Message Simulator");
         loginButton = new JButton("Login");
         loginPanel = new JPanel();
@@ -66,7 +81,7 @@ public class Login extends  JFrame {
         loginPanel.add(username);
         loginPanel.add(password);
         frame.add(loginPanel);
-        users = new ArrayList<>();
+
         frame.setVisible(true);
         loginPanel.setVisible(true);
 
@@ -125,75 +140,36 @@ public class Login extends  JFrame {
         newUserPanel.add(goBack);
         frame.add(newUserPanel);
         newUserPanel.setVisible(false);
-
-
-
-        Writer writer = null;
-        File check = new File("userPass.txt");
-        if (check.exists()) {
-
-        } else {
-            try {
-                File texting = new File("userPass.txt");
-                writer = new BufferedWriter(new FileWriter(texting));
-                writer.write("message");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    File file = new File("userPass.txt");
-                    FileReader fr = new FileReader(file);
-                    BufferedReader bfr = new BufferedReader(fr);
+                String puname = user.getText();
+                String ppaswd = pass.getText();
 
+                if (puname.equals("") || ppaswd.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Please insert Username and Password");
+                } else {
 
-
-
-                    String puname = user.getText();
-                    String ppaswd = pass.getText();
-                    ArrayList<String> usernameArray = new ArrayList<>();
-                    ArrayList<String> passwordArray = new ArrayList<>();
-
-                    String usernamePasswordData = " ";
-                    while (usernamePasswordData != null) {
-                        usernamePasswordData = bfr.readLine();
-                        usernameArray.add(usernamePasswordData);
-                        usernamePasswordData = bfr.readLine();
-                        if (usernamePasswordData == null) {
-                            break;
-                        }
-                        passwordArray.add(usernamePasswordData);
-
-                    }
-
-                    if (puname.equals("") || ppaswd.equals("")) {
-                        JOptionPane.showMessageDialog(null, "Please insert Username and Password");
+                    int userIndex = checkUsername(users, puname);
+                    if (userIndex == -1) {
+                        JOptionPane.showMessageDialog(null, "No accounts with that username");
+                        user.setText("");
+                        pass.setText("");
+                        user.requestFocus();
                     } else {
-
-                        int userIndex = checkUsername(usernameArray, puname);
-                        if (userIndex == -1) {
-                            JOptionPane.showMessageDialog(null, "No accounts with that username");
+                        if (users.get(userIndex).getPassword().equals(ppaswd)) {
+                            JOptionPane.showMessageDialog(null, "Logged in");
+                            new MessageGUI(users.get(userIndex));
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Wrong Password");
                             user.setText("");
                             pass.setText("");
                             user.requestFocus();
-                        } else {
-                            if (passwordArray.get(userIndex).equals(ppaswd)) {
-                                JOptionPane.showMessageDialog(null, "Logged in");
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Wrong Password");
-                                user.setText("");
-                                pass.setText("");
-                                user.requestFocus();
-                            }
                         }
                     }
-                } catch (IOException d) {
-                    d.printStackTrace();
                 }
-
             }
+
+
         });
 
       newUser.addActionListener(new ActionListener(){
@@ -205,36 +181,13 @@ public class Login extends  JFrame {
                        loginPanel.setVisible(true);
                        newUserPanel.setVisible(false);
                    }
-
                });
                addUser.addActionListener(new ActionListener() {
                    public void actionPerformed(ActionEvent e) {
                        String username = newUsername.getText();
-                       File file = new File("userPass.txt");
-                       FileReader fr = null;
-                       try {
-                           fr = new FileReader(file);
-                       } catch (FileNotFoundException fileNotFoundException) {
-                           fileNotFoundException.printStackTrace();
-                       }
-                       BufferedReader bfr = new BufferedReader(fr);
-                       ArrayList<String> usernameArray = new ArrayList<>();
-                       ArrayList<String> passwordArray = new ArrayList<>();
-                       try {
-                           String usernamePasswordData = usernamePasswordData = bfr.readLine();
-                           while (usernamePasswordData != null) {
-                               usernameArray.add(usernamePasswordData);
-                               usernamePasswordData = bfr.readLine();
-                               passwordArray.add(usernamePasswordData);
-                               usernamePasswordData = bfr.readLine();
-                           }
-                       } catch (IOException ioException) {
-                           JOptionPane.showMessageDialog(null, "Error in reading file");
-                       }
-
                        boolean exists = false;
-                       for (int i = 0; i < usernameArray.size(); i++) {
-                           if (usernameArray.get(i).equals(username)) {
+                       for (int i = 0; i < users.size(); i++) {
+                           if (users.get(i).getUsername().equals(username)) {
                                exists = true;
                                loginPanel.setVisible(true);
                                newUserPanel.setVisible(false);
@@ -249,9 +202,8 @@ public class Login extends  JFrame {
                            User newUser = new User(name, username, password, ageOfUser, genderOfUser);
                            users.add(newUser);
                            storeUsernamePassword(newUser);
+                           new MessageGUI(newUser);
                        }
-
-
                    }
                });
            }
@@ -260,10 +212,10 @@ public class Login extends  JFrame {
 
     }
 
-    public int checkUsername(ArrayList<String> usernameArray, String puname) {
+    public int checkUsername(ArrayList<User> usernameArray, String puname) {
         int userIndex = -1;
         for (int i = 0; i < usernameArray.size(); i++) {
-            if (usernameArray.get(i).equals(puname)) {
+            if (usernameArray.get(i).getUsername().equals(puname)) {
                 userIndex = i;
                 break;
             }
@@ -280,8 +232,8 @@ public class Login extends  JFrame {
             FileWriter filewrite = new FileWriter(file, true);
             PrintWriter pw = new PrintWriter(filewrite);
             pw.println();
-            pw.println(newUser.getUsername());
-            pw.print(newUser.getPassword());
+            pw.print(newUser.getUsername() + "," + newUser.getPassword() + "," + newUser.getName()
+                    + "," + newUser.getAge() + "," + newUser.getGender());
             pw.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Glitch in the system");
