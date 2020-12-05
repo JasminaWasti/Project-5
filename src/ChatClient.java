@@ -31,7 +31,7 @@ public class ChatClient {
         frame.getContentPane().add(textField, BorderLayout.SOUTH);
         frame.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
         frame.pack();
-
+        frame.setVisible(true);
 
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

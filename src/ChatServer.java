@@ -34,59 +34,60 @@ public class ChatServer {
 
         public void run() {
             new Login();
-            try {
-                in = new Scanner(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream(), true);
-
-
-                while (true) {
-                    out.println("SUBMITNAME");
-                    name = in.nextLine();
-                    if (name == null) {
-                        return;
-                    }
-                    synchronized (names) {
-                        if (!name.isBlank() && !names.contains(name)) {
-                            names.add(name);
-                            break;
-                        }
-                    }
-                }
-
-                out.println("NAMEACCEPTED " + name);
-                for (PrintWriter writer : writers) {
-                    writer.println("MESSAGE " + name + " has joined");
-                }
-                writers.add(out);
-
-                while (true) {
-                    String input = in.nextLine();
-                    if (input.toLowerCase().startsWith("/quit")) {
-                        return;
-                    }
-                    for (PrintWriter writer : writers) {
-                        writer.println("MESSAGE " + name + ": " + input);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
-                if (out != null) {
-                    writers.remove(out);
-                }
-                if (name != null) {
-                    System.out.println(name + " is leaving");
-                    names.remove(name);
-                    for (PrintWriter writer : writers) {
-                        writer.println("MESSAGE " + name + " has left");
-                    }
-                }
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                }
-            }
+//            try {
+//                in = new Scanner(socket.getInputStream());
+//                out = new PrintWriter(socket.getOutputStream(), true);
+//
+//
+//                while (true) {
+//                    out.println("SUBMITNAME");
+//                    name = in.nextLine();
+//                    if (name == null) {
+//                        return;
+//                    }
+//                    synchronized (names) {
+//                        if (!name.isBlank() && !names.contains(name)) {
+//                            names.add(name);
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                out.println("NAMEACCEPTED " + name);
+//                for (PrintWriter writer : writers) {
+//                    writer.println("MESSAGE " + name + " has joined");
+//                }
+//                writers.add(out);
+//
+//                while (true) {
+//                    String input = in.nextLine();
+//                    if (input.toLowerCase().startsWith("/quit")) {
+//                        return;
+//                    }
+//                    for (PrintWriter writer : writers) {
+//                        writer.println("MESSAGE " + name + ": " + input);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            } finally {
+//                if (out != null) {
+//                    writers.remove(out);
+//                }
+//                if (name != null) {
+//                    System.out.println(name + " is leaving");
+//                    names.remove(name);
+//                    for (PrintWriter writer : writers) {
+//                        writer.println("MESSAGE " + name + " has left");
+//                    }
+//                }
+//                try {
+//                    socket.close();
+//                } catch (IOException e) {
+//                }
+//            }
         }
+
     }
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
