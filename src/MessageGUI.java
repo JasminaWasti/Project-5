@@ -12,7 +12,7 @@ public class MessageGUI extends JFrame {
     private ObjectOutputStream oos;
     private ObjectInputStream input;
 
-    public MessageGUI() {
+    public MessageGUI(User user) {
         super("ChatNet");
         userInput = new JTextField();
         userInput.addActionListener(new ActionListener() {
@@ -78,7 +78,7 @@ public class MessageGUI extends JFrame {
             showMessage("Connection could not be established");
         }
     }
-}
+
 
     private void closeChatWindow() {
         showMessage("\n shutting down communication, good-bye");

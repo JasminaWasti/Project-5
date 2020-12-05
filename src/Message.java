@@ -1,5 +1,3 @@
-package main;
-
 public class Message {
     User sender;
     User receiver;

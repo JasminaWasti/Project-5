@@ -157,8 +157,8 @@ public class Login extends  JFrame {
                         user.requestFocus();
                     } else {
                         if (users.get(userIndex).getPassword().equals(ppaswd)) {
-                            JOptionPane.showMessageDialog(null, "Logged in");
                             new MessageGUI(users.get(userIndex));
+                            frame.setVisible(false);
                         } else {
                             JOptionPane.showMessageDialog(null, "Wrong Password");
                             user.setText("");
@@ -203,6 +203,7 @@ public class Login extends  JFrame {
                            users.add(newUser);
                            storeUsernamePassword(newUser);
                            new MessageGUI(newUser);
+                           frame.setVisible(false);
                        }
                    }
                });
