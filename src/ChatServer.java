@@ -1,7 +1,7 @@
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -17,10 +17,9 @@ public class ChatServer {
         System.out.println("The chat server is running...");
         var pool = Executors.newFixedThreadPool(500);
         try (var listener = new ServerSocket(59001)) {
-            while (true) {
-                pool.execute(new Handler(listener.accept()));
-            }
+            pool.execute(new Handler(listener.accept()));
         }
+
     }
 
     private static class Handler implements Runnable {
@@ -34,6 +33,7 @@ public class ChatServer {
         }
 
         public void run() {
+            new Login();
             try {
                 in = new Scanner(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -87,5 +87,23 @@ public class ChatServer {
                 }
             }
         }
+    }
+    public static ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            File file = new File("userPass.txt");
+            FileReader fr = new FileReader(file);
+            BufferedReader bfr = new BufferedReader(fr);
+            String usernamePasswordData = bfr.readLine();
+            while (usernamePasswordData != null) {
+                String[] data = usernamePasswordData.split(",");
+                User readUser = new User(data[2], data[0], data[1], Integer.parseInt(data[3]), data[4]);
+                users.add(readUser);
+                usernamePasswordData = bfr.readLine();
+            }
+        } catch (IOException d) {
+            d.printStackTrace();
+        }
+        return users;
     }
 }

@@ -76,8 +76,8 @@ public class User {
     }
 
     public void addFriend(String username) throws Exception{
-        for (int i=0; i< MessageServer.getUsers().size(); i++){
-            User user = MessageServer.getUsers().get(i);
+        for (int i=0; i< ChatServer.getUsers().size(); i++){
+            User user = ChatServer.getUsers().get(i);
             if (user.getUsername().equals(username)){
                 this.texts.put(user, new ArrayList<>());
                 File file = new File(username + "&" + this.username);
@@ -91,8 +91,8 @@ public class User {
     }
 
     public void sendMessage(String username, String message) throws Exception{
-        for (int i=0; i< MessageServer.getUsers().size(); i++) {
-            User user = MessageServer.getUsers().get(i);
+        for (int i=0; i< ChatServer.getUsers().size(); i++) {
+            User user = ChatServer.getUsers().get(i);
             if (user.getUsername().equals(username)) {
                 ArrayList<Message> messages = this.texts.get(user);
                 messages.add(new Message(this, user, message));
