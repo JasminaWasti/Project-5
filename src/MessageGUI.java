@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 
-public class MessageGui extends JFrame {
+public class MessageGUI extends JFrame {
     JFrame frame;
     JPanel messagePanel;
     JTextField conversationTextField;
@@ -14,7 +14,7 @@ public class MessageGui extends JFrame {
     int yCoordCounter = 60;
     User currentUser;
 
-    public MessageGui(User user) {
+    public MessageGUI(User user) {
         super("ChatNet");
         currentUser = user;
         users = new ArrayList<>();
